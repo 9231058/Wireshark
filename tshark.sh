@@ -8,6 +8,8 @@
 # [] Created By : Parham Alvani (parham.alvani@gmail.com)
 # =======================================
 
+echo " ** Welcome to @1995parham tshark (in the memory of a friend) ** "
+
 if hash tshark 2> /dev/null; then
         echo "tshark is ready"
 else
@@ -16,42 +18,43 @@ else
 fi
 
 i=1
-echo " ** Welcome to @1995parham tshark (in the memory of a friend) ** "
 while read name details
 do
-	ifconfig $name > /dev/null 2>&1
-	if [ $? -eq 0 ]; then
-		echo "[$i]: $name:"; echo
-		ifconfig $name
-		echo; echo
-		capture_interfaces="$capture_interfaces $name"
-		let i=$i+1
-	fi
+        ifconfig $name > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+                echo "[$i]: $name:"; echo
+                ifconfig $name
+                echo; echo
+                capture_interfaces="$capture_interfaces $name"
+                let i=$i+1
+        fi
 done < <(netstat -in)
 
 oPS3=$PS3
 PS3="Select your capturing interface:"
 select capture_interface in $capture_interfaces
 do
-	if [ ! -z "$capture_interface" ]; then
-		echo "You select $capture_interface"
-		break
-	else
-		echo "$REPLAY is not valid"
-	fi
+        if [ ! -z "$capture_interface" ]; then
+                echo "You select $capture_interface"
+                break
+        else
+                echo "$REPLAY is not valid"
+        fi
 done
 PS3=$oPS3
 
 capture_file=/tmp/$(date +"%F_%H:%m:%S")-$capture_interface.pcap
 
 echo "Capturing start"; echo
-tshark -i "$capture_interface" -F pcap -P -w "$capture_file" -f "not port 22"
+sudo tshark -i "$capture_interface" -F pcap -P -w "$capture_file" -f "not port 22"
 echo; echo "Capturing done"; echo
 
 read -p "Do you want to copy captured file here ?[Y/n]" -n 1 copy_confirm; echo
 if [[ $copy_confirm == "Y" ]]; then
-	sudo chown $USER "$capture_file"
-	cp "$capture_file" .
-	echo "Captured file moved here successfully"
+        sudo chown $USER "$capture_file"
+        mv "$capture_file" .
+        echo "Captured file moved here successfully"
+else
+        rm "$capture_file"
+        echo "Captured file is removed"
 fi
-echo "Capturing output file is ready for read."
