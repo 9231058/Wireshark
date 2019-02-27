@@ -46,7 +46,7 @@ PS3=$oPS3
 capture_file=/tmp/$(date +"%F_%H:%m:%S")-$capture_interface.pcap
 
 echo "Capturing start with your given options"; echo
-sudo tshark -i "$capture_interface" -F pcap -P -w "$capture_file" -f "not port 22" $@
+sudo tshark -f "not port 22" -i "$capture_interface" -F pcap -P -w "$capture_file" $@
 echo; echo "Capturing done"; echo
 
 read -p "Do you want to copy captured file here ?[Y/n]" -n 1 copy_confirm; echo
