@@ -1,7 +1,7 @@
 # Wireshark
 ## Introduction
-Capture packets with wireshark gives you a good view over network layers.
-`tshark.sh` is a simple hepler for packet capturing based on `tshark`.
+Capturing packets with wireshark gives you a good insights over network layers.
+`tshark.sh` is a simple hepler script for packet capturing based on `tshark`.
 
 ## Step by Step to Capture
 
@@ -14,6 +14,7 @@ sudo apt install tshark
 3. Read the pcap file with `tshark`.
 
 ## TCP Connection to Closed Port
+Here we are trying to create connetion with a closed port and as you can see we have gotten the RST.
 
 ```tshark
    57  23.910132 192.168.73.6 → 192.168.73.5 TCP 74 39404 → 23 [SYN] Seq=0 Win=29200 Len=0 MSS=1460 SACK_PERM=1 TSval=2561801316 TSecr=0 WS=128
@@ -21,6 +22,9 @@ sudo apt install tshark
 ```
 
 ## Funny TCP Connection
+One of the main points about TCP connections is their Seq and Ack numbers for each of their packet.
+As may know TCP connections start with random sequence number and `tshark` changes it to zero for us.
+Sequence number increases with packet lengths as you can see and the PSH flag is used to send data to the application layer immediately.
 
 ```tshark
    78  28.719289 192.168.73.6 → 192.168.73.5 TCP 74 47244 → 3000 [SYN] Seq=0 Win=29200 Len=0 MSS=1460 SACK_PERM=1 TSval=2561806125 TSecr=0 WS=128
